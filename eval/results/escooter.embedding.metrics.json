@@ -1,0 +1,31 @@
+{
+  "request_id": "escooter",
+  "request": "Filter the cases associated with e-scooter injuries.",
+  "embedding_model": "gemini-embedding-2",
+  "dimensions": 3072,
+  "validation": "leave-one-out",
+  "similarity": {
+    "n": 60,
+    "tp": 1,
+    "fp": 3,
+    "fn": 4,
+    "tn": 52,
+    "precision": 0.25,
+    "recall": 0.2,
+    "f1": 0.222,
+    "accuracy": 0.883
+  },
+  "logreg": {
+    "n": 60,
+    "tp": 4,
+    "fp": 2,
+    "fn": 1,
+    "tn": 53,
+    "precision": 0.667,
+    "recall": 0.8,
+    "f1": 0.727,
+    "accuracy": 0.95
+  },
+  "similarity_threshold_all_cases": 0.6588,
+  "mean_embedding_latency_s": 0.31
+}

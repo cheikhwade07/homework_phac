@@ -1,0 +1,80 @@
+{
+  "request_id": "escooter",
+  "request": "Filter the cases associated with e-scooter injuries.",
+  "classifier": "llm:gemini-2.5-flash:classify.v2",
+  "all_cases": {
+    "n": 60,
+    "tp": 5,
+    "fp": 9,
+    "fn": 0,
+    "tn": 46,
+    "precision": 0.357,
+    "recall": 1.0,
+    "f1": 0.526,
+    "accuracy": 0.85
+  },
+  "excluding_ambiguous": {
+    "n": 51,
+    "tp": 3,
+    "fp": 3,
+    "fn": 0,
+    "tn": 45,
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1": 0.667,
+    "accuracy": 0.941
+  },
+  "by_stratum": {
+    "hard_negative": {
+      "n": 12,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 12,
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "accuracy": 1.0
+    },
+    "keyword": {
+      "n": 40,
+      "tp": 5,
+      "fp": 9,
+      "fn": 0,
+      "tn": 26,
+      "precision": 0.357,
+      "recall": 1.0,
+      "f1": 0.526,
+      "accuracy": 0.775
+    },
+    "random": {
+      "n": 8,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 8,
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "accuracy": 1.0
+    }
+  },
+  "errors": 0,
+  "evidence_not_found": 0,
+  "evidence_checked": 14,
+  "mean_latency_s": 0.75,
+  "mean_input_tokens": 1145,
+  "mean_output_tokens": 50,
+  "false_positives": [
+    "PMC10134166_05",
+    "PMC9647680_01",
+    "PMC10155729_01",
+    "PMC9046070_01",
+    "PMC8302369_01",
+    "PMC3884183_01",
+    "PMC3133471_01",
+    "PMC11251802_02",
+    "PMC11140048_02"
+  ],
+  "false_negatives": []
+}

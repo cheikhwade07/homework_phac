@@ -1,0 +1,31 @@
+{
+  "request_id": "cardio",
+  "request": "Filter the cases related to cardiovascular disease.",
+  "embedding_model": "gemini-embedding-2",
+  "dimensions": 3072,
+  "validation": "leave-one-out",
+  "similarity": {
+    "n": 40,
+    "tp": 7,
+    "fp": 13,
+    "fn": 10,
+    "tn": 10,
+    "precision": 0.35,
+    "recall": 0.412,
+    "f1": 0.378,
+    "accuracy": 0.425
+  },
+  "logreg": {
+    "n": 40,
+    "tp": 11,
+    "fp": 3,
+    "fn": 6,
+    "tn": 20,
+    "precision": 0.786,
+    "recall": 0.647,
+    "f1": 0.71,
+    "accuracy": 0.775
+  },
+  "similarity_threshold_all_cases": 0.6125,
+  "mean_embedding_latency_s": 0.33
+}

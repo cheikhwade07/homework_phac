@@ -1,0 +1,80 @@
+{
+  "request_id": "cardio",
+  "request": "Filter the cases related to cardiovascular disease.",
+  "classifier": "llm:gemini-2.5-flash:classify.v2",
+  "all_cases": {
+    "n": 40,
+    "tp": 14,
+    "fp": 5,
+    "fn": 3,
+    "tn": 18,
+    "precision": 0.737,
+    "recall": 0.824,
+    "f1": 0.778,
+    "accuracy": 0.8
+  },
+  "excluding_ambiguous": {
+    "n": 35,
+    "tp": 13,
+    "fp": 3,
+    "fn": 2,
+    "tn": 17,
+    "precision": 0.812,
+    "recall": 0.867,
+    "f1": 0.839,
+    "accuracy": 0.857
+  },
+  "by_stratum": {
+    "hard_negative": {
+      "n": 10,
+      "tp": 4,
+      "fp": 2,
+      "fn": 3,
+      "tn": 1,
+      "precision": 0.667,
+      "recall": 0.571,
+      "f1": 0.615,
+      "accuracy": 0.5
+    },
+    "keyword": {
+      "n": 15,
+      "tp": 8,
+      "fp": 2,
+      "fn": 0,
+      "tn": 5,
+      "precision": 0.8,
+      "recall": 1.0,
+      "f1": 0.889,
+      "accuracy": 0.867
+    },
+    "random": {
+      "n": 15,
+      "tp": 2,
+      "fp": 1,
+      "fn": 0,
+      "tn": 12,
+      "precision": 0.667,
+      "recall": 1.0,
+      "f1": 0.8,
+      "accuracy": 0.933
+    }
+  },
+  "errors": 0,
+  "evidence_not_found": 0,
+  "evidence_checked": 19,
+  "mean_latency_s": 0.76,
+  "mean_input_tokens": 956,
+  "mean_output_tokens": 60,
+  "false_positives": [
+    "PMC7649878_01",
+    "PMC5438004_01",
+    "PMC5573896_01",
+    "PMC5791395_01",
+    "PMC8554308_01"
+  ],
+  "false_negatives": [
+    "PMC6463335_01",
+    "PMC3843907_01",
+    "PMC10734349_01"
+  ]
+}
