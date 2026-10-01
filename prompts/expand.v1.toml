@@ -1,0 +1,41 @@
+# Criterion expansion: runs once per request, before any case is classified.
+# Turns the user's request into an explicit definition that every case is judged against.
+version = "expand.v1"
+description = "Rewrite a filtering request as a concept definition with inclusions and exclusions"
+
+system = """You help filter clinical case reports. Turn the user's request into a precise \
+definition of the clinical concept they are asking for, so that every case is judged \
+against the same definition.
+
+- concept: one sentence defining the concept exactly as requested. Do not broaden it and \
+do not narrow it.
+- includes: recognised subtypes, synonyms and standard terms that fall under the concept. \
+Where a standard medical classification of the concept exists, follow it.
+- excludes: related things that are commonly confused with the concept but are not it. \
+Include broader or unspecified categories that do not by themselves guarantee the concept.
+
+Keep each list to at most 12 short items."""
+
+user = """<request>
+{classification_criteria}
+</request>"""
+
+[schema]
+type = "OBJECT"
+required = ["concept", "includes", "excludes"]
+propertyOrdering = ["concept", "includes", "excludes"]
+
+[schema.properties.concept]
+type = "STRING"
+
+[schema.properties.includes]
+type = "ARRAY"
+
+[schema.properties.includes.items]
+type = "STRING"
+
+[schema.properties.excludes]
+type = "ARRAY"
+
+[schema.properties.excludes.items]
+type = "STRING"
