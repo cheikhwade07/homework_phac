@@ -12,6 +12,16 @@ one-sentence reason and a supporting quote from the case. The request is supplie
 runtime. Nothing about a clinical concept is hard-coded, so the same code handles
 leukemia, infectious disease or any other request.
 
+## Where to look
+
+| If you want | Read |
+|---|---|
+| The design decisions and the reasoning behind them (prompt design, long texts, ambiguity, consistency, scaling, limitations) | **[DESIGN.md](DESIGN.md)** |
+| The evaluation results | [eval/results/SUMMARY.md](eval/results/SUMMARY.md) |
+| The discussion of every disagreement between the LLM and the reference labels | [eval/ERROR_ANALYSIS.md](eval/ERROR_ANALYSIS.md) |
+| Example runs for different requests | [examples/](examples/) |
+| The prompt templates | [prompts/](prompts/) |
+
 ## Results at a glance
 
 Evaluated on two labeled test sets (60 and 40 cases). Full table:
