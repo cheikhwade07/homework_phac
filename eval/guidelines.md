@@ -1,7 +1,8 @@
 # Labeling Guidelines
 
-These rules were written **before** any case was labeled. The reference labels in
-`eval/testsets/` follow them, and they define what "relevant" means for the evaluation.
+These rules were written **before** any case was labeled, except the clarifications at
+the end. The reference labels in `eval/testsets/` follow them, and they define what
+"relevant" means for the evaluation.
 
 ## General rules (all requests)
 
@@ -19,12 +20,15 @@ A case is **not relevant (NO)** when the concept:
 diagnosis, as long as it is a significant part of the case course.
 
 **Ambiguity.** Every case gets YES or NO. When the decision is genuinely debatable, the
-`ambiguous` flag is set and the note explains why. Ambiguous cases are reported
-separately in the error analysis.
+`ambiguous` flag is set and the note explains why. Metrics are reported both with and
+without the ambiguous cases.
 
-**Independence from the classifier.** Reference labels were assigned before the
-classifier was run on these cases. Each label records the sentence from the case that
-supports it, and that quote is checked to appear verbatim in the case text.
+**How the labels were assigned.** Each case was read and compared against these
+guidelines. Every YES label, and most NO labels where the concept is mentioned, records
+the sentence that the decision rests on; that quote is checked to appear verbatim in the
+case text. The first set of labels was assigned before the classifier was run on these
+cases. After a second independent read, two labels were changed and three more were
+flagged as ambiguous (listed in `eval/ERROR_ANALYSIS.md`).
 
 ## Request: cardiovascular disease
 
@@ -64,3 +68,12 @@ kick scooter, stand-up electric scooter), or a person injured by a collision wit
 
 **Usually ambiguous (flag):** "scooter" with no indication of the type; an e-scooter
 accident where the report focuses on an unrelated condition found incidentally.
+
+## Clarifications added after the second review
+
+- **Motorized scooter.** "Motorized scooter" with no statement that it is electric is
+  treated like an unspecified scooter: NO, flagged ambiguous.
+- **Venous disease.** A deep vein thrombosis or pulmonary embolism that occurs during the
+  case is YES. Chronic venous disease such as varicose veins is a blood-vessel disorder
+  and is labeled YES, flagged ambiguous, because it is not what "cardiovascular disease"
+  usually refers to.

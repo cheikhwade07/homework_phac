@@ -6,25 +6,25 @@
   "validation": "leave-one-out",
   "similarity": {
     "n": 40,
-    "tp": 7,
-    "fp": 13,
-    "fn": 10,
+    "tp": 11,
+    "fp": 12,
+    "fn": 7,
     "tn": 10,
-    "precision": 0.35,
-    "recall": 0.412,
-    "f1": 0.378,
-    "accuracy": 0.425
+    "precision": 0.478,
+    "recall": 0.611,
+    "f1": 0.537,
+    "accuracy": 0.525
   },
   "logreg": {
     "n": 40,
     "tp": 11,
-    "fp": 3,
-    "fn": 6,
-    "tn": 20,
-    "precision": 0.786,
-    "recall": 0.647,
-    "f1": 0.71,
-    "accuracy": 0.775
+    "fp": 4,
+    "fn": 7,
+    "tn": 18,
+    "precision": 0.733,
+    "recall": 0.611,
+    "f1": 0.667,
+    "accuracy": 0.725
   },
   "similarity_threshold_all_cases": 0.6125,
   "mean_embedding_latency_s": 0.33

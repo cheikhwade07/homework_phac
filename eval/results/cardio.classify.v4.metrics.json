@@ -4,37 +4,37 @@
   "classifier": "llm:gemini-2.5-flash:classify.v4",
   "all_cases": {
     "n": 40,
-    "tp": 15,
-    "fp": 5,
+    "tp": 16,
+    "fp": 4,
     "fn": 2,
     "tn": 18,
-    "precision": 0.75,
-    "recall": 0.882,
-    "f1": 0.811,
-    "accuracy": 0.825
+    "precision": 0.8,
+    "recall": 0.889,
+    "f1": 0.842,
+    "accuracy": 0.85
   },
   "excluding_ambiguous": {
-    "n": 35,
+    "n": 32,
     "tp": 14,
-    "fp": 3,
+    "fp": 1,
     "fn": 1,
-    "tn": 17,
-    "precision": 0.824,
+    "tn": 16,
+    "precision": 0.933,
     "recall": 0.933,
-    "f1": 0.875,
-    "accuracy": 0.886
+    "f1": 0.933,
+    "accuracy": 0.938
   },
   "by_stratum": {
     "hard_negative": {
       "n": 10,
-      "tp": 5,
-      "fp": 2,
+      "tp": 6,
+      "fp": 1,
       "fn": 2,
       "tn": 1,
-      "precision": 0.714,
-      "recall": 0.714,
-      "f1": 0.714,
-      "accuracy": 0.6
+      "precision": 0.857,
+      "recall": 0.75,
+      "f1": 0.8,
+      "accuracy": 0.7
     },
     "keyword": {
       "n": 15,
@@ -67,7 +67,6 @@
   "mean_output_tokens": 62,
   "false_positives": [
     "PMC5438004_01",
-    "PMC5573896_01",
     "PMC5791395_01",
     "PMC8554308_01",
     "PMC4322308_01"

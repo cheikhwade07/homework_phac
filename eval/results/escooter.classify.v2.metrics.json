@@ -4,14 +4,14 @@
   "classifier": "llm:gemini-2.5-flash:classify.v2",
   "all_cases": {
     "n": 60,
-    "tp": 5,
-    "fp": 9,
+    "tp": 4,
+    "fp": 10,
     "fn": 0,
     "tn": 46,
-    "precision": 0.357,
+    "precision": 0.286,
     "recall": 1.0,
-    "f1": 0.526,
-    "accuracy": 0.85
+    "f1": 0.444,
+    "accuracy": 0.833
   },
   "excluding_ambiguous": {
     "n": 51,
@@ -38,14 +38,14 @@
     },
     "keyword": {
       "n": 40,
-      "tp": 5,
-      "fp": 9,
+      "tp": 4,
+      "fp": 10,
       "fn": 0,
       "tn": 26,
-      "precision": 0.357,
+      "precision": 0.286,
       "recall": 1.0,
-      "f1": 0.526,
-      "accuracy": 0.775
+      "f1": 0.444,
+      "accuracy": 0.75
     },
     "random": {
       "n": 8,
@@ -70,6 +70,7 @@
     "PMC9647680_01",
     "PMC10155729_01",
     "PMC9046070_01",
+    "PMC9168337_01",
     "PMC8302369_01",
     "PMC3884183_01",
     "PMC3133471_01",

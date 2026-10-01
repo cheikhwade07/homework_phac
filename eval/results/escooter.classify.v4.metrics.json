@@ -6,12 +6,12 @@
     "n": 60,
     "tp": 4,
     "fp": 2,
-    "fn": 1,
-    "tn": 53,
+    "fn": 0,
+    "tn": 54,
     "precision": 0.667,
-    "recall": 0.8,
-    "f1": 0.727,
-    "accuracy": 0.95
+    "recall": 1.0,
+    "f1": 0.8,
+    "accuracy": 0.967
   },
   "excluding_ambiguous": {
     "n": 51,
@@ -40,12 +40,12 @@
       "n": 40,
       "tp": 4,
       "fp": 2,
-      "fn": 1,
-      "tn": 33,
+      "fn": 0,
+      "tn": 34,
       "precision": 0.667,
-      "recall": 0.8,
-      "f1": 0.727,
-      "accuracy": 0.925
+      "recall": 1.0,
+      "f1": 0.8,
+      "accuracy": 0.95
     },
     "random": {
       "n": 8,
@@ -69,7 +69,5 @@
     "PMC9046070_01",
     "PMC3884183_01"
   ],
-  "false_negatives": [
-    "PMC9168337_01"
-  ]
+  "false_negatives": []
 }

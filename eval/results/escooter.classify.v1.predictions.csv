@@ -20,7 +20,7 @@ PMC4891626_01,NO,0,after a fall from a human-powered scooter,Non-electric scoote
 PMC7476703_01,YES,0,Trauma was related to an accident on the public road (electric scooter),,keyword,YES,,,,,TP
 PMC7338719_02,NO,0,a knee wound infection following a scooter accident at 16 years of age,Past history only; type not stated,keyword,NO,,,,,TN
 PMC9149196_02,NO,0,could only move with a mobility scooter,Mobility scooter; no injury,keyword,NO,,,,,TN
-PMC9168337_01,YES,1,whilst riding at 30 mph on a motorized scooter,Motorized scooter ridden by a child; electric not stated,keyword,YES,,,,,TP
+PMC9168337_01,NO,1,whilst riding at 30 mph on a motorized scooter,"Motorized scooter, electric not stated; revised from YES after second review",keyword,YES,,,,,FP
 PMC8302369_01,NO,1,after she jumped from a scooter to brake going downhill at high speed,Scooter type not stated,keyword,YES,,,,,FP
 PMC3738343_01,NO,0,during a parking maneuver with her motor scooter,Motor scooter,keyword,NO,,,,,TN
 PMC6408853_01,NO,0,he used a non-motorized scooter under the left foot,Non-motorized; no injury,keyword,NO,,,,,TN

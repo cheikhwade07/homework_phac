@@ -4,14 +4,14 @@
   "classifier": "llm:gemini-2.5-flash:classify.v3",
   "all_cases": {
     "n": 60,
-    "tp": 5,
-    "fp": 2,
+    "tp": 4,
+    "fp": 3,
     "fn": 0,
     "tn": 53,
-    "precision": 0.714,
+    "precision": 0.571,
     "recall": 1.0,
-    "f1": 0.833,
-    "accuracy": 0.967
+    "f1": 0.727,
+    "accuracy": 0.95
   },
   "excluding_ambiguous": {
     "n": 51,
@@ -38,14 +38,14 @@
     },
     "keyword": {
       "n": 40,
-      "tp": 5,
-      "fp": 2,
+      "tp": 4,
+      "fp": 3,
       "fn": 0,
       "tn": 33,
-      "precision": 0.714,
+      "precision": 0.571,
       "recall": 1.0,
-      "f1": 0.833,
-      "accuracy": 0.95
+      "f1": 0.727,
+      "accuracy": 0.925
     },
     "random": {
       "n": 8,
@@ -67,6 +67,7 @@
   "mean_output_tokens": 44,
   "false_positives": [
     "PMC9046070_01",
+    "PMC9168337_01",
     "PMC3884183_01"
   ],
   "false_negatives": []

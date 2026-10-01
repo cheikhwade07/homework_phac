@@ -4,37 +4,37 @@
   "classifier": "llm:gemini-2.5-flash:classify.v3",
   "all_cases": {
     "n": 40,
-    "tp": 17,
-    "fp": 9,
+    "tp": 18,
+    "fp": 8,
     "fn": 0,
     "tn": 14,
-    "precision": 0.654,
+    "precision": 0.692,
     "recall": 1.0,
-    "f1": 0.791,
-    "accuracy": 0.775
+    "f1": 0.818,
+    "accuracy": 0.8
   },
   "excluding_ambiguous": {
-    "n": 35,
+    "n": 32,
     "tp": 15,
-    "fp": 7,
+    "fp": 4,
     "fn": 0,
     "tn": 13,
-    "precision": 0.682,
+    "precision": 0.789,
     "recall": 1.0,
-    "f1": 0.811,
-    "accuracy": 0.8
+    "f1": 0.882,
+    "accuracy": 0.875
   },
   "by_stratum": {
     "hard_negative": {
       "n": 10,
-      "tp": 7,
-      "fp": 2,
+      "tp": 8,
+      "fp": 1,
       "fn": 0,
       "tn": 1,
-      "precision": 0.778,
+      "precision": 0.889,
       "recall": 1.0,
-      "f1": 0.875,
-      "accuracy": 0.8
+      "f1": 0.941,
+      "accuracy": 0.9
     },
     "keyword": {
       "n": 15,
@@ -69,7 +69,6 @@
     "PMC7649878_01",
     "PMC10466787_01",
     "PMC5438004_01",
-    "PMC5573896_01",
     "PMC5791395_01",
     "PMC6357786_01",
     "PMC7305409_01",

@@ -3,7 +3,7 @@ PMC7446551_01,YES,0,A coronary angiogram showed severe 3-vessel coronary artery 
 PMC7649878_01,NO,0,small pericardial effusion,Incidental imaging finding in a systemic illness
 PMC5313427_01,YES,1,These findings suggested that the patient had significant pulmonary hypertension,Pulmonary vascular disease caused by tumour emboli
 PMC8464216_01,NO,1,,"Subdural haematoma from a bleeding disorder, no vascular lesion found"
-PMC10466787_01,NO,0,,Thymic carcinoma and psoriasis; pericardium only invaded by tumour
+PMC10466787_01,NO,1,,"Thymic carcinoma invading the pericardium, with superior vena cava syndrome"
 PMC4383126_01,YES,0,He was a known case of rheumatic heart disease since the age of 30 years,Poor ventricular function drives the anaesthetic management
 PMC11402799_01,NO,0,,Fungal infection in lupus; chest pain not cardiac
 PMC6815536_01,NO,0,,Abdominal case
@@ -16,21 +16,21 @@ PMC6119206_01,YES,0,"consistent with an atheroemboli, indicative of renal athero
 PMC6042331_01,NO,0,,Fanconi anaemia
 PMC6463335_01,YES,0,Biopsies of the temporal arteries showed a granulomatous vasculitis,Giant cell arteritis
 PMC10336784_01,YES,0,an infrarenal AAA with a maximum infrarenal diameter of 70 mm,
-PMC5573896_01,NO,1,accompanied by deep vein thrombosis,DVT mentioned once; the case is about encephalitis
+PMC5573896_01,YES,1,accompanied by deep vein thrombosis,New deep vein thrombosis during the case; revised from NO after second review
 PMC3843907_01,YES,0,the patient presented with an acute stroke,
 PMC3104541_01,YES,0,Echocardiography revealed features of HCM with severe left ventricular outflow obstruction,
 PMC10734349_01,YES,1,a long history of bilateral lower limb varicose veins,"Venous disease: a blood-vessel disorder, but not typical cardiovascular disease"
 PMC5815477_02,YES,0,Left corpus callosum infarction was observed on head CT,
 PMC6298260_01,NO,0,Electrocardiogram showed normal sinus rhythm,Tramadol poisoning; normal ECG
 PMC11407891_01,YES,0,Clinical examination revealed the presence of thoracic ectopia cordis,
-PMC5791395_01,NO,0,tachycardia and mild hypertension on examination,Signs of a bladder paraganglioma
+PMC5791395_01,NO,1,tachycardia and mild hypertension on examination,"Hypertension from a bladder paraganglioma, treated before surgery"
 PMC6357786_01,NO,0,The patient presented a history of arterial hypertension,Comorbidity only
 PMC7305409_01,NO,0,Given unexplained tachycardia,Vaping-related lung injury
 PMC5493813_01,NO,0,,Nasal obstruction
 PMC6335686_01,NO,0,There were no signs and symptoms suggestive of cardiac abnormalities,Cardiac involvement excluded
 PMC9063448_03,NO,0,,Ptosis
 PMC5880229_01,NO,0,,Lung adenocarcinoma
-PMC8554308_01,NO,0,"hypovolemic shock with tachycardia, hypotension, and bleeding tendency",Neonatal bleeding; shock from blood loss
+PMC8554308_01,NO,1,"hypovolemic shock with tachycardia, hypotension, and bleeding tendency",Neonatal intracranial haemorrhage with shock from blood loss
 PMC8149743_01,NO,0,,Radiation-related leukaemia
 PMC4322308_01,NO,0,,"Health services study, not a patient"
 PMC6529587_01,YES,0,trans-thoracic echocardiography showed a subarterial VSD with a diameter of 8 mm,

@@ -4,8 +4,10 @@ A random sample alone would contain almost no positives for rare concepts (only 
 of 110,182 cases mention a scooter at all), so each test set mixes three strata:
 
 - keyword:       likely positives found by keyword search
-- hard_negative: similar-looking cases that should be NO (other vehicles, cardiac
-                 terms used in passing)
+- hard_negative: look-alike cases found by broader keywords (other vehicles; secondary
+                 cardiac terms such as hypertension or ECG without a core diagnosis
+                 term). The patterns are deliberately loose, so this stratum also
+                 contains relevant cases and some unrelated text.
 - random:        a random draw from the rest of the corpus
 
 Writes eval/testsets/<request>.candidates.csv with columns case_id, stratum.
