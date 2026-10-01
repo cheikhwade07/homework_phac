@@ -1,0 +1,7 @@
+# Evaluation requests. The text is passed to the classifier exactly as a user would type it.
+
+[cardio]
+text = "Filter the cases related to cardiovascular disease."
+
+[escooter]
+text = "Filter the cases associated with e-scooter injuries."
