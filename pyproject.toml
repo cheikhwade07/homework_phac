@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "casefilter"
+version = "0.1.0"
+description = "LLM-based filtering of MultiCaRe clinical cases by a user-defined criterion"
+requires-python = ">=3.11"
+dependencies = [
+    "datasets>=2.19",
+    "google-genai>=1.0",
+    "python-dotenv>=1.0",
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "rank-bm25>=0.2.2",
+    "scikit-learn>=1.4",
+    "streamlit>=1.35",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

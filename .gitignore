@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Secrets
+.env
+
+# Local data and caches (never committed)
+data/
+.cache/
+*.parquet
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
