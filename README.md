@@ -69,8 +69,9 @@ Design decisions and their measured evidence are in [DESIGN.md](DESIGN.md).
 
 ## Setup
 
-Requires Python 3.11 or later and a Gemini API key
-([free from Google AI Studio](https://aistudio.google.com/apikey)).
+Requires Python 3.11 or later. Run every command from the repository root.
+
+### 1. Install
 
 Windows (PowerShell):
 
@@ -94,13 +95,44 @@ pip install -e ".[dev]"
 cp .env.example .env
 ```
 
-Then put your key in `.env` as `GEMINI_API_KEY=...`.
+### 2. Add a Gemini API key
 
-Run every command from the repository root: the dataset cache (`data/`) and the response
-cache (`.cache/`) are created relative to the current folder.
+1. Open [Google AI Studio](https://aistudio.google.com/apikey) and sign in with a Google
+   account.
+2. Click **Create API key** and copy it. The free tier is enough and needs no payment
+   details.
+3. Open the `.env` file created in step 1 and paste the key after `GEMINI_API_KEY=`, with
+   no quotes or spaces:
 
-The first run downloads the dataset (about 185 MB) and caches it in `data/`. The
-evaluation results in `eval/results/` are committed, so they can be read without a key.
+   ```text
+   GEMINI_API_KEY=your-key-here
+   ```
+
+`.env` is ignored by git, so the key is never committed.
+
+### 3. Check that it works
+
+Without a key (runs the unit tests with a fake LLM, about one second):
+
+```bash
+pytest
+```
+
+With the key (classifies 5 cases, about 10 seconds after the dataset is downloaded):
+
+```bash
+casefilter "Filter the cases related to leukemia." --keyword leukemia --n 5
+```
+
+You should see how the request was interpreted, a YES or NO for each of the 5 cases, and
+the relevant cases with a reason and a quote.
+
+Notes:
+- The first run downloads the dataset (about 185 MB) into `data/`.
+- Model responses are cached in `.cache/`, so repeating a run is instant and free.
+- If the key is missing, the tool says so and exits. On the free tier a large run may
+  pause on a rate limit and then continue by itself.
+- The evaluation results in `eval/results/` are committed and can be read without a key.
 
 ## Usage
 
@@ -300,7 +332,7 @@ tests/            unit tests
 - Prompts v3 and v4 were written after analysing errors on the same test sets, and the
   default was chosen on them, so their scores are optimistic. There is no held-out set.
 - There is one set of reference labels and no inter-annotator agreement score.
-- The model does not reliably apply the "history only" rule, which causes most false
-  positives.
+- The model does not reliably apply the exclusion rules (history-only mentions, isolated
+  signs, incidental findings), which causes most false positives.
 - Hybrid retrieval for full-dataset runs is designed (DESIGN.md, D8) but not implemented.
 - The output is a filter to support human review, not a clinical decision.

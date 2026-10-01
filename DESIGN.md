@@ -15,7 +15,7 @@ flowchart LR
     C --> V["Evidence check<br/>quote must appear in case_text"]
     V --> O["YES / NO + reason + evidence"]
     O --> UI["Streamlit app / CLI"]
-    C <-.-> K[("Result cache")]
+    C -.-> K[("Result cache")]
 ```
 
 Not implemented, described in D8: hybrid retrieval (keyword plus embeddings) as a first
@@ -155,8 +155,8 @@ cases (4.58 characters per token) applied to all 110,182 cases:
 
 **Decision.**
 - **Multiple conditions.** A case is relevant when the concept is *a* significant part of
-  the case, not only when it is the main diagnosis. The prompt says so explicitly
-  ("a complication that the report describes or treats").
+  the case, not only when it is the main diagnosis. The prompt accepts "a diagnosis,
+  cause, mechanism, event or complication that is part of this case".
 - **Ambiguity is recorded, not hidden.** Every reference label is YES or NO, with an
   `ambiguous` flag and a note when the decision is debatable (for example "scooter" with
   no type stated). Metrics are reported both on all cases and without flagged cases.
@@ -204,8 +204,10 @@ permitting). That is too slow and too costly to repeat for every new request.
 
 **Design (not implemented).** Two stages: retrieve candidates cheaply, then let the LLM
 verify only those.
-- Keyword search (BM25) suits lexical concepts: all e-scooter cases contain the word
-  "scooter", so 40 LLM calls replace 110,182.
+- Keyword search (BM25) suits lexical concepts: every e-scooter case found in this
+  project contains the word "scooter", so 40 LLM calls replace 110,182. A case that
+  describes one without that word would be missed, which is why retrieval recall has to
+  be measured.
 - Embedding search suits broad concepts such as cardiovascular disease, where no single
   keyword covers the concept. Case vectors are computed once and reused for every request.
 - The two rankings can be merged with reciprocal rank fusion.
