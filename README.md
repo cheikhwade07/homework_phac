@@ -20,12 +20,16 @@ Evaluated on two labeled test sets (60 and 40 cases). Full table:
 
 | Request | Method | Precision | Recall | F1 | False positives | False negatives |
 |---|---|---|---|---|---|---|
-| E-scooter injuries | LLM, baseline prompt (v1) | 0.56 | 1.00 | 0.71 | 4 | 0 |
-| | **LLM, default prompt (v3)** | **0.71** | **1.00** | **0.83** | 2 | 0 |
-| | Embeddings + logistic regression | 0.67 | 0.80 | 0.73 | 2 | 1 |
-| Cardiovascular disease | LLM, baseline prompt (v1) | 0.83 | 0.88 | 0.86 | 3 | 2 |
-| | **LLM, default prompt (v3)** | 0.65 | **1.00** | 0.79 | 9 | 0 |
-| | Embeddings + logistic regression | 0.79 | 0.65 | 0.71 | 3 | 6 |
+| E-scooter injuries | LLM, baseline prompt (v1) | 0.44 | 1.00 | 0.61 | 5 | 0 |
+| | **LLM, default prompt (v3)** | 0.57 | **1.00** | 0.73 | 3 | 0 |
+| | LLM, stricter prompt (v4) | **0.67** | **1.00** | **0.80** | 2 | 0 |
+| | Embeddings + logistic regression | 0.50 | 0.50 | 0.50 | 2 | 2 |
+| Cardiovascular disease | LLM, baseline prompt (v1) | **0.89** | 0.89 | **0.89** | 2 | 2 |
+| | **LLM, default prompt (v3)** | 0.69 | **1.00** | 0.82 | 8 | 0 |
+| | LLM, stricter prompt (v4) | 0.80 | 0.89 | 0.84 | 4 | 2 |
+| | Embeddings + logistic regression | 0.73 | 0.61 | 0.67 | 4 | 7 |
+
+The e-scooter set has 4 relevant cases out of 60, the cardiovascular set 18 out of 40.
 
 Three findings:
 
@@ -33,12 +37,14 @@ Three findings:
    rules (v2) scored below the baseline. Rewriting the request once into an explicit
    definition (v3) fixed the scope errors: unspecified "scooter" accidents were no longer
    accepted, and strokes were recognised as cardiovascular.
-2. **No prompt wins everywhere.** v3 misses nothing on either request but accepts too many
-   cardiovascular cases where hypertension is only in the history. It is the default
-   because the output is meant for human review, where a missed case costs more than an
-   extra one. The sets are small, so differences of a few cases are not conclusive.
+2. **No prompt wins everywhere.** The baseline has the best F1 on cardiovascular disease
+   and v4 on e-scooter injuries. v3 is the default because it is the only version that
+   misses nothing on either request, and the output is meant for human review, where a
+   missed case costs more than an extra one. Its weakness is false positives: it accepts
+   cases where a condition appears only in the history. The sets are small, so
+   differences of a few cases are not conclusive.
 3. **Embeddings are cheaper but do not adapt.** The embedding classifier needs labeled
-   examples for every new request. The LLM needs none.
+   examples for every new request and still scored below the LLM. The LLM needs none.
 
 ## How it works
 
@@ -66,17 +72,32 @@ Design decisions and their measured evidence are in [DESIGN.md](DESIGN.md).
 Requires Python 3.11 or later and a Gemini API key
 ([free from Google AI Studio](https://aistudio.google.com/apikey)).
 
+Windows (PowerShell):
+
+```powershell
+git clone https://github.com/cheikhwade07/homework_phac.git
+cd homework_phac
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -e ".[dev]"
+copy .env.example .env
+```
+
+macOS / Linux:
+
 ```bash
 git clone https://github.com/cheikhwade07/homework_phac.git
 cd homework_phac
 python -m venv .venv
-.venv\Scripts\activate          # Windows
-# source .venv/bin/activate     # macOS / Linux
+source .venv/bin/activate
 pip install -e ".[dev]"
-copy .env.example .env          # Windows; use cp on macOS / Linux
+cp .env.example .env
 ```
 
 Then put your key in `.env` as `GEMINI_API_KEY=...`.
+
+Run every command from the repository root: the dataset cache (`data/`) and the response
+cache (`.cache/`) are created relative to the current folder.
 
 The first run downloads the dataset (about 185 MB) and caches it in `data/`. The
 evaluation results in `eval/results/` are committed, so they can be read without a key.
@@ -145,11 +166,15 @@ three requests, no code change:
 | Filter the cases related to infectious disease. | 8 of 20 |
 | Filter the cases related to cardiovascular disease. | 5 of 20 |
 
+The full output of each run is saved in [`examples/`](examples/).
+
 ### Choosing how strict the filter is
 
-The default prompt (v3) favours recall: it also returns cases where the condition appears
-only in the patient's history. The stricter v4 prompt keeps only cases where the condition
-is an active part of the case. On 8 cases that all contain the word "leukemia":
+The default prompt (v3) tells the model to exclude conditions that appear only in the
+patient's history, but the model does not reliably follow that rule, so v3 returns those
+cases too. The stricter v4 prompt makes the model name the role of the condition first,
+and keeps only cases where it is an active part of the case. On 8 cases that all contain
+the word "leukemia":
 
 ```text
 casefilter "Filter the cases related to leukemia." --keyword leukemia --n 8
@@ -161,8 +186,8 @@ YES   PMC8382793_01   A 19-year-old male with relapsed ... B cell acute lymphobl
 NO    PMC6088461_01   A 79-year-old female with past medical history of chronic lymphocytic leukemia (in...
 ```
 
-The evaluation shows the same trade-off: v3 misses nothing but has more false positives,
-v4 is more precise but missed three relevant cases across the two test sets.
+The evaluation shows the same trade-off: v3 misses nothing but has more false positives;
+v4 is more precise but missed two relevant cardiovascular cases.
 
 ## Prompt templates
 
@@ -200,25 +225,35 @@ The expected output is a JSON object: `reason`, `label` (`YES` or `NO`) and `evi
 | File | Content |
 |---|---|
 | [`eval/guidelines.md`](eval/guidelines.md) | What "relevant" means, written before labeling |
-| [`eval/testsets/`](eval/testsets/) | Sampled cases and their reference labels, each with a supporting quote |
+| [`eval/testsets/`](eval/testsets/) | Sampled cases and their reference labels, with the supporting quote |
 | [`eval/results/SUMMARY.md`](eval/results/SUMMARY.md) | Precision, recall, F1 and confusion matrix for every method |
 | [`eval/results/*.predictions.csv`](eval/results/) | One row per case: reference label, prediction, reason, evidence |
 | [`eval/ERROR_ANALYSIS.md`](eval/ERROR_ANALYSIS.md) | Every false positive and false negative, with a category |
 
 **Test sets.** A random sample would contain no e-scooter cases, so each set mixes keyword
-matches, hard negatives (other vehicles; cardiac terms used in passing) and random cases.
-Each case was read against the guidelines and given a reference label, with the supporting
-sentence recorded, before the classifier was run on it. Cases where the decision is
-debatable carry an `ambiguous` flag (14 of 100).
+matches, look-alike cases found by broader keywords (other vehicles; secondary cardiac
+terms) and random cases.
+
+**Reference labels.** Each case was read and compared against the guidelines and given a
+YES or NO label, with the sentence the decision rests on recorded and checked to appear in
+the case. The first set of labels was assigned before the classifier was run on those
+cases. After a second independent read, two labels were changed and three more were
+flagged as debatable; all reported results use the revised labels. Debatable cases carry
+an `ambiguous` flag (17 of 100), and F1 is also reported without them.
 
 To reproduce:
 
 ```bash
 python eval/run_eval.py escooter --prompt classify.v3
 python eval/run_eval.py cardio --prompt classify.v3
+python eval/run_embedding_eval.py escooter
 python eval/run_embedding_eval.py cardio
 python eval/summarize.py
 ```
+
+Model responses are cached in `.cache/`, which is not committed. A rerun on another
+machine calls the API again, and results can differ by a case or two, because the
+provider does not guarantee identical output across calls.
 
 ## Considerations
 
@@ -241,8 +276,8 @@ ruff check .
 pytest
 ```
 
-55 unit tests cover output parsing, prompt rendering, criterion expansion, the evidence
-check, metrics, case selection, caching and text chunking. The LLM is replaced by a fake
+59 unit tests cover output parsing, prompt rendering, criterion expansion, the evidence
+check, metrics, case selection, caching, text chunking and command-line validation. The LLM is replaced by a fake
 client, so the tests run without an API key. GitHub Actions runs both commands on every
 push.
 
@@ -253,6 +288,7 @@ prompts/          versioned prompt templates
 src/casefilter/   library: data, LLM client, expansion, classifier, embeddings, metrics, CLI
 app/              Streamlit interface
 eval/             guidelines, test sets, evaluation scripts, results, error analysis
+examples/         saved output for four different requests
 scripts/          token-length profile of the dataset
 tests/            unit tests
 ```
@@ -260,8 +296,11 @@ tests/            unit tests
 ## Limitations
 
 - The evaluation sets are small and enriched with likely positives; precision on the full
-  dataset would be lower.
-- Prompts v3 and v4 were written after analysing errors on the same test sets, so their
-  scores are optimistic. There is no held-out set.
+  dataset would be lower. The e-scooter set has only 4 relevant cases.
+- Prompts v3 and v4 were written after analysing errors on the same test sets, and the
+  default was chosen on them, so their scores are optimistic. There is no held-out set.
+- There is one set of reference labels and no inter-annotator agreement score.
+- The model does not reliably apply the "history only" rule, which causes most false
+  positives.
 - Hybrid retrieval for full-dataset runs is designed (DESIGN.md, D8) but not implemented.
 - The output is a filter to support human review, not a clinical decision.

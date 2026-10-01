@@ -18,7 +18,7 @@ flowchart LR
     C <-.-> K[("Result cache")]
 ```
 
-Not implemented, described in D7: hybrid retrieval (keyword plus embeddings) as a first
+Not implemented, described in D8: hybrid retrieval (keyword plus embeddings) as a first
 stage in front of the classifier.
 
 ## Data model
@@ -37,16 +37,16 @@ decision.
 case text together and returns a binary label.
 
 **Alternatives.** Keyword rules per concept (hard-coded, excluded by the brief); an
-embedding classifier (D8).
+embedding classifier (D9).
 
 **Why.** Reading the request and the case *together* lets the model weigh how the concept
 appears: negated, in the history, as a cause. This is the cross-encoder pattern from
 information retrieval: the most accurate way to score a pair, but the score cannot be
-pre-computed, so cost grows with the number of cases (D7).
+pre-computed, so cost grows with the number of cases (D8).
 
-**Evidence.** On the same labeled sets the LLM reaches F1 0.83 (e-scooter) and 0.79
-(cardiovascular) with no training examples. The embedding classifier reaches 0.73 and
-0.71 and needs labels for each request (D8).
+**Evidence.** On the same labeled sets the LLM reaches F1 0.73 (e-scooter) and 0.82
+(cardiovascular) with no training examples. The embedding classifier reaches 0.50 and
+0.67 and needs labels for each request (D9).
 
 ## D2. Expand the request once into an explicit definition
 
@@ -63,10 +63,10 @@ consistent across cases and visible to the user, for one extra call per request.
 
 **Evidence.**
 - E-scooter: the definition excludes "scooter injury (unspecified type)". Precision rose
-  from 0.56 (v1) to 0.71 (v3) with recall unchanged at 1.00.
-- Cardiovascular: the definition includes stroke. Recall rose from 0.88 to 1.00; both
+  from 0.44 (v1) to 0.57 (v3) with recall unchanged at 1.00.
+- Cardiovascular: the definition includes stroke. Recall rose from 0.89 to 1.00; both
   cases missed by v1 were strokes.
-- Cost: precision on cardiovascular fell from 0.83 to 0.65, because every term on the
+- Cost: precision on cardiovascular fell from 0.89 to 0.69, because every term on the
   inclusion list ("hypertension", "arrhythmia") became a trigger, even in past history.
 
 **Not built.** Letting the user edit the definition before running. The interfaces
@@ -91,15 +91,18 @@ display it but do not accept changes.
 
 | Version | Change | E-scooter F1 | Cardiovascular F1 |
 |---|---|---|---|
-| v1 | Template from the brief, label only | 0.71 | 0.86 |
-| v2 | Relevance rules, evidence quote | 0.53 | 0.78 |
-| v3 | Expanded definition (D2) | 0.83 | 0.79 |
-| v4 | v3 plus an explicit "role" step | 0.73 | 0.81 |
+| v1 | Template from the brief, label only | 0.61 | 0.89 |
+| v2 | Relevance rules, evidence quote | 0.44 | 0.81 |
+| v3 | Expanded definition (D2) | 0.73 | 0.82 |
+| v4 | v3 plus an explicit "role" step | 0.80 | 0.84 |
 
 **What this shows.** More instructions did not mean better results. v2 scored below the
-baseline because one instruction ("include recognised subtypes") was applied backwards.
-No version wins on both requests, and with 40 to 60 cases the differences are within a
-few cases. v3 is the default because it is the only version with no false negatives on
+baseline on both requests. v2 changed several things at once, so the cause is not
+isolated, but the model's reasons suggest that one instruction ("include recognised
+subtypes") was applied backwards in some cases. No version wins on both requests: the
+baseline has the best F1 on cardiovascular disease and v4 on e-scooter injuries, and with
+40 to 60 cases the differences are within a few cases. v4 has a higher F1 than v3 on both
+sets, but v3 is the default because it is the only version with no false negatives on
 either request: for a filter whose output is reviewed by a person, a missed case costs
 more than an extra one, and each YES comes with a quote that makes it quick to dismiss.
 
@@ -109,7 +112,9 @@ more than an extra one, and each YES comes with a quote that makes it quick to d
 JSON; the model name and prompt version recorded with every result; responses cached on
 (model, prompts, schema, settings). Output that cannot be parsed, or a failed call,
 becomes an explicit `ERROR` result, never a silent `NO`. There is no retry on a parse
-failure: at temperature 0 the same input gives the same output.
+failure. Temperature 0 makes the output far more stable, but the provider does not
+guarantee identical output across calls; exact repeatability here comes from the cache.
+Empty responses are not cached.
 
 **Evidence check.** The code verifies that the `evidence` quote appears verbatim in
 `case_text`, ignoring case and whitespace, and flags the result if it does not.
@@ -117,15 +122,20 @@ failure: at temperature 0 the same input gives the same output.
 **Evidence.**
 - 0 unparseable outputs and 0 failed calls across 400 evaluation classifications.
 - 31 of 33 quotes for v3 YES answers were found verbatim. The other 2 were correct labels
-  where the model had joined two separate sentences into one "quote". The check caught both.
-- A 1,024-token reasoning budget changed results by one or two cases in either direction
-  and raised latency from about 0.75 s to about 2.5 s per case, so it stays off.
+  with an inexact quote (two sentences joined in one case, a clause dropped in the
+  other). The check caught both.
+- In a side experiment (results not saved), a 1,024-token reasoning budget changed
+  results by one or two cases in either direction and roughly tripled latency, so it
+  stays off.
 
 ## D5. Long clinical narratives
 
 **Decision.** Measure first. Every case is sent **whole** to the LLM, with no chunking.
-Only the embedding path splits long texts: cases above the embedding model's input limit
-are split into overlapping chunks whose vectors are averaged (`casefilter/embedding.py`).
+Only the embedding path splits long texts: texts above 24,000 characters (a safe margin
+below the embedding model's 8,192-token limit; 92 cases in the corpus) are split into
+overlapping chunks whose vectors are averaged (`casefilter/embedding.py`). No case in
+the evaluation sets is that long, so chunking is unit-tested but was not exercised by
+the evaluation.
 
 **Why.** Whole cases preserve context (a cause in paragraph one, the outcome in paragraph
 five). Chunking would add complexity and lose that context with no benefit at the LLM
@@ -153,9 +163,9 @@ cases (4.58 characters per token) applied to all 110,182 cases:
 - **The interpretation is explicit.** The expanded definition (D2) states how the request
   was read, and each YES carries a reason and a quote for a reviewer to check.
 
-**Evidence.** 14 of 100 reference labels are flagged ambiguous. Without them, v3 F1 is
-0.86 (e-scooter) and 0.81 (cardiovascular). Four of v3's eleven disagreements fall on
-flagged or borderline cases.
+**Evidence.** 17 of 100 reference labels are flagged ambiguous. Without them, v3 F1 is
+0.86 (e-scooter) and 0.88 (cardiovascular). Six of v3's eleven disagreements fall on
+flagged cases.
 
 ## D7. Evaluation method
 
@@ -163,18 +173,25 @@ flagged or borderline cases.
 - Labeling guidelines (`eval/guidelines.md`) were written before labeling, and define
   relevance in the same terms as the prompt.
 - Rare concepts need enriched samples: only 40 of 110,182 cases mention a scooter. Each
-  test set mixes keyword matches, **hard negatives** (other vehicles; cardiac terms used
-  in passing) and random cases (`eval/build_candidates.py`).
-- Reference labels (`eval/testsets/*.labels.csv`) were assigned before the classifier was
-  run on those cases. Each YES records the supporting sentence, which is verified to
-  appear in the case.
+  test set mixes keyword matches, look-alike cases found by broader keywords (other
+  vehicles; secondary cardiac terms such as hypertension or ECG) and random cases
+  (`eval/build_candidates.py`). The look-alike patterns are loose: for cardiovascular
+  disease 8 of those 10 cases turned out to be relevant, and for e-scooters some matches
+  are unrelated text.
+- Reference labels (`eval/testsets/*.labels.csv`): each case was read and compared
+  against the guidelines. Each YES records the supporting sentence, which is verified to
+  appear in the case. The first set was assigned before the classifier was run on those
+  cases; after a second independent read, two labels were changed and three more were
+  flagged ambiguous. All reported results use the revised labels.
 - Reported: precision, recall, F1, the confusion matrix, results per sampling stratum,
   and every false positive and false negative with a category.
 
 **Caveats.** The sets are small and enriched, so precision on the full dataset would be
-lower. Prompts v3 and v4 were written after analysing errors on these same cases, so
-their scores are optimistic; there is no held-out set. One set of reference labels was
-used, without a second annotator.
+lower; there are only 4 relevant e-scooter cases, so one label moves recall by 25
+points. Prompts v3 and v4 were written after analysing errors on these same cases and
+the default was chosen on them, so their scores are optimistic; there is no held-out
+set. The prompt rules share wording with the guidelines, which favours the LLM. There is
+one set of reference labels and no inter-annotator agreement score.
 
 ## D8. Scaling to the complete dataset
 
@@ -204,20 +221,28 @@ provider's batch API would lower cost further.
 **Decision.** Two embedding approaches were evaluated on the same labeled sets
 (`eval/run_embedding_eval.py`), with leave-one-out cross-validation:
 1. **Similarity threshold:** cosine similarity between the request and the case.
-2. **Logistic regression** trained on case embeddings and their labels.
+2. **Logistic regression** trained on case embeddings and their labels. It was chosen
+   over a linear SVM or k-nearest neighbours as the simplest of the suggested
+   classifiers; with 40 to 60 labeled cases the choice of classifier matters less than
+   the number of labels.
 
 **Evidence.**
 
 | | E-scooter F1 | Cardiovascular F1 | Seconds per case | Labels needed per request |
 |---|---|---|---|---|
-| LLM, prompt v3 | 0.83 | 0.79 | 0.75 | None |
-| Embedding + logistic regression | 0.73 | 0.71 | 0.32 (once per case) | Yes |
-| Embedding similarity threshold | 0.22 | 0.38 | 0.32 (once per case) | Only a threshold |
+| LLM, prompt v3 | 0.73 | 0.82 | 0.75 | None |
+| Embedding + logistic regression | 0.50 | 0.67 | 0.32 (once per case) | Yes |
+| Embedding similarity threshold | 0.25 | 0.54 | 0.32 (once per case) | Only a threshold |
 
 **Trade-offs.**
-- *Inference time and cost.* An embedding is computed once per case and reused for every
-  request; classifying is then a dot product. The LLM pays the full cost per case, per
-  request.
+- *Inference time.* About 0.32 s to embed a case, once; classifying it afterwards is a
+  dot product or a logistic regression, which takes microseconds. The LLM takes about
+  0.75 s per case, for every request.
+- *Computational cost.* Embedding the corpus is a one-time cost of about 70M input
+  tokens. The LLM needs about 130M input tokens per request over the full corpus
+  (case text plus instructions and definition), plus about 50 output tokens per case.
+  After the first request the embedding approach costs almost nothing; the LLM cost
+  repeats in full.
 - *Scalability.* Embeddings scale to the full dataset easily; the LLM does not (D8).
 - *Adapting to a new request.* The logistic regression cannot move from leukemia to
   e-scooter injuries without new labeled examples and retraining. The similarity approach
@@ -239,11 +264,14 @@ can be swapped. Neither API keys nor the downloaded dataset are committed.
 
 - **It errs towards YES.** With the default prompt all 11 disagreements are false
   positives: a matching phrase is treated as sufficient even when the rules exclude it.
-- **Sensitive to wording.** One instruction in the prompt lowered e-scooter F1 from 0.71 to 0.53 (v1 to v2).
+- **Sensitive to wording.** Between prompt v1 and v2, e-scooter F1 fell from 0.61 to 0.44.
   Results also depend on how the user phrases the request; the definition makes this
   visible but does not remove it.
 - **The definition is generated by the model.** It can differ from what the user means
   (it excluded deep vein thrombosis from cardiovascular disease, for example).
+- **Prompt injection.** Case text is inserted unescaped inside `<case>` tags. The only
+  defence against instructions embedded in a case is the prompt telling the model to
+  treat that text as data.
 - **Not every text is a patient case.** Study discussions and questionnaires in the
   dataset are classified as if they were cases.
 - **Cost and latency** grow with the number of cases and repeat for each request (D8).

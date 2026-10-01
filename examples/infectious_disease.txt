@@ -1,0 +1,66 @@
+Request:    Filter the cases related to infectious disease.
+Classifier: llm:gemini-2.5-flash:classify.v3
+Cases:      20
+
+Request interpreted as
+  Concept: Infectious disease refers to illnesses caused by pathogenic microorganisms, such as bacteria, viruses, fungi, or parasites, that can be spread, directly or indirectly, from one person to another, or from an animal to a person, or from the environment to a person.
+  Counts as the concept: Bacterial infections; Viral infections; Fungal infections; Parasitic infections; Communicable diseases; Contagious diseases; Infectious mononucleosis; Influenza; Tuberculosis; Malaria; HIV/AIDS; COVID-19
+  Does not count: Non-infectious diseases; Genetic disorders; Autoimmune diseases; Cancers; Metabolic disorders; Traumatic injuries; Environmental toxins; Allergies; Inflammation (unless specified as infectious); Sepsis (unless specified as infectious origin); Fever of unknown origin (unless infectious cause is confirmed); Chronic fatigue syndrome (unless infectious cause is confirmed)
+
+Result for each case
+--------------------------------------------------------------------------------------------------------------
+NO    PMC7327585_01     We report the case of a 70-year-old man who was neither treated for tuberculosis...
+NO    PMC7491569_01     Our first patient was a 93-year-old woman presenting with a 2-month history of...
+YES   PMC10915755_02    A 67-year-old postmenopausal woman with a history of vulvar ulcers and pain for 3...
+NO    PMC5922339_03     A 41-year-old female received a left single lung transplant for fibrotic non-...
+NO    PMC6334183_01     A 50-year-old man admitted to our hospital for alcohol-induced acute pancreatitis...
+NO    PMC3921742_01     A 76-year-old patient, reported to our urology outpatient department in October...
+YES   PMC8590259_01     The first one was a case of ChAdOx1 nCoV-19 associated fever with transient...
+NO    PMC9935956_01     A 29-year-old female was referred to our institution for the evaluation of an...
+NO    PMC4392181_01     A 65-year-old male, autonomous, with cardiovascular co-morbidities and a history of...
+NO    PMC9833981_01     A 15-year-old female patient was admitted to our clinic in November of 2021 with a...
+NO    PMC10615080_01    A 71-year-old man was diagnosed with right upper lung lobe cancer (Fig. 1A). The...
+YES   PMC5330340_01     We suggest that this case is reflected on in stages. Stage 1: An on call...
+YES   PMC4877140_01     A 64-year-old woman presented to our emergency department with a 10-day history of...
+YES   PMC8457974_01     A 12-year-old boy was admitted to our hospital under the diagnosis of...
+YES   PMC1242259_01     A 61 year-old male was admitted for constipation and a palpable mass in the...
+NO    PMC10564254_01    We report a 36-year-old female who has had recurrent and severe early-onset...
+YES   PMC9812595_01     A 34-year-old woman was referred to our hospital with sepsis and prolonged fever....
+YES   PMC6529707_03     A 40 year-old Guatemalan man with HIV/AIDS (CD4 count 26) not on antiretroviral...
+NO    PMC8344952_01     A 25 year old man presented with a one week history of rapidly progressive simple...
+NO    PMC8474637_05     Patient 5 was a 68-year-old female who was diagnosed with AML after presenting with...
+
+Relevant cases: 8 of 20
+--------------------------------------------------------------------------------------------------------------
+PMC10915755_02
+  evidence: "HPV testing was positive for HPV33/53/82"
+  reason:   The case explicitly states that HPV testing was positive for HPV33/53/82, which is a viral infection and thus an infectious disease.
+
+PMC8590259_01
+  evidence: "Few case reports with elderly patients have been documented in the literature for COVID-19 disease induced pancytopenia"
+  reason:   The case mentions COVID-19 disease, which is an infectious disease.
+
+PMC5330340_01
+  evidence: "The consultant obstetrician informs him that the mother is HIV positive."
+  reason:   The case explicitly states that the mother is HIV positive, which is an infectious disease.
+
+PMC4877140_01
+  evidence: "An initial diagnosis of a lower respiratory tract infection was made, and antibiotics were commenced"
+  reason:   The case report mentions an initial diagnosis of a lower respiratory tract infection, which is an infectious disease.
+
+PMC8457974_01
+  evidence: "We confirmed the organism as R. mucilaginosa using matrix-assisted laser desorption/ionization mass spectrometry (confidence score, 2.405) at 1 day."
+  reason:   The case describes a patient diagnosed with an infection caused by R. mucilaginosa, which is a bacterial infection.
+
+PMC1242259_01
+  evidence: "The mass was filled with abscess and granulation tissue, and the frozen biopsy reported the diagnosis of abscess."
+  reason:   The case mentions an abscess, which is a collection of pus caused by a bacterial infection, thus indicating an infectious disease.
+
+PMC9812595_01
+  evidence: "The result was a myelodysplasia syndrome (MDS) with a refractory cytopenia multilineage dysplasia (RCMD) subtype and infection with Histoplasma capsulatum"
+  reason:   The case explicitly states the patient had an infection with Histoplasma capsulatum, which is a fungal infection and thus an infectious disease.
+
+PMC6529707_03
+  evidence: "A 40 year-old Guatemalan man with HIV/AIDS (CD4 count 26) not on antiretroviral therapy"
+  reason:   The case explicitly states the patient has HIV/AIDS, which is an infectious disease.
+
