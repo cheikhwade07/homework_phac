@@ -1,7 +1,7 @@
-"""Label evaluation cases by hand in the terminal, blind to model output.
+"""Review and label evaluation cases one at a time in the terminal.
 
-Cases are shown in a shuffled order without their sampling stratum. Answers are
-saved after every case, so labeling can stop and resume at any time.
+Cases are shown in a shuffled order without their sampling stratum and without any
+model output. Answers are saved after every case, so labeling can stop and resume.
 
 Keys:  y = YES   n = NO   y? / n? = YES / NO, flagged ambiguous (asks for a note)
        s = skip for now   q = save and quit
@@ -24,7 +24,7 @@ import pandas as pd
 from casefilter.data import get_cases, load_cases
 
 EVAL_DIR = Path(__file__).parent
-COLUMNS = ["case_id", "human_label", "ambiguous", "note"]
+COLUMNS = ["case_id", "reference_label", "ambiguous", "evidence", "note"]
 
 
 def main(request_id: str) -> None:
@@ -62,8 +62,9 @@ def main(request_id: str) -> None:
         note = input("Note (why ambiguous): ").strip() if ambiguous else ""
         row = {
             "case_id": case_id,
-            "human_label": "YES" if answer.startswith("y") else "NO",
+            "reference_label": "YES" if answer.startswith("y") else "NO",
             "ambiguous": int(ambiguous),
+            "evidence": "",
             "note": note,
         }
         labels = pd.concat([labels, pd.DataFrame([row])], ignore_index=True)

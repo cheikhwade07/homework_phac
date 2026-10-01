@@ -1,4 +1,4 @@
-"""Build the candidate cases to label for each evaluation request (DESIGN D6).
+"""Build the candidate cases to label for each evaluation request (DESIGN D7).
 
 A random sample alone would contain almost no positives for rare concepts (only 40
 of 110,182 cases mention a scooter at all), so each test set mixes three strata:
@@ -9,7 +9,6 @@ of 110,182 cases mention a scooter at all), so each test set mixes three strata:
 - random:        a random draw from the rest of the corpus
 
 Writes eval/testsets/<request>.candidates.csv with columns case_id, stratum.
-The stratum is hidden from the labeler.
 
 Usage: python eval/build_candidates.py
 """

@@ -1,6 +1,6 @@
 # Labeling Guidelines
 
-These rules were written **before** any case was labeled. The human labels in
+These rules were written **before** any case was labeled. The reference labels in
 `eval/testsets/` follow them, and they define what "relevant" means for the evaluation.
 
 ## General rules (all requests)
@@ -22,8 +22,9 @@ diagnosis, as long as it is a significant part of the case course.
 `ambiguous` flag is set and the note explains why. Ambiguous cases are reported
 separately in the error analysis.
 
-**Blind labeling.** Labels are assigned without seeing any model output. The sampling
-stratum of each case (keyword match, hard negative, random) is hidden while labeling.
+**Independence from the classifier.** Reference labels were assigned before the
+classifier was run on these cases. Each label records the sentence from the case that
+supports it, and that quote is checked to appear verbatim in the case text.
 
 ## Request: cardiovascular disease
 
