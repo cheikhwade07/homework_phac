@@ -47,7 +47,7 @@ def evaluate(request_id: str, prompt_version: str) -> dict:
     ]
 
     clear = table[table["ambiguous"].astype(int) == 0]
-    fresh = [p for p in predictions if not p.cached and p.label != "ERROR"]
+    timed = [p for p in predictions if p.label != "ERROR" and p.latency_s > 0]
     yes = [p for p in predictions if p.label == "YES" and p.evidence_found is not None]
     metrics = {
         "request_id": request_id,
@@ -62,7 +62,7 @@ def evaluate(request_id: str, prompt_version: str) -> dict:
         "errors": int((table["predicted"] == "ERROR").sum()),
         "evidence_not_found": sum(1 for p in yes if p.evidence_found is False),
         "evidence_checked": len(yes),
-        "mean_latency_s": round(sum(p.latency_s for p in fresh) / len(fresh), 2) if fresh else None,
+        "mean_latency_s": round(sum(p.latency_s for p in timed) / len(timed), 2) if timed else None,
         "mean_input_tokens": round(sum(p.input_tokens for p in predictions) / len(predictions)),
         "mean_output_tokens": round(sum(p.output_tokens for p in predictions) / len(predictions)),
         "false_positives": list(table.loc[table["outcome"] == "FP", "case_id"]),

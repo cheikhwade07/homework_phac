@@ -1,7 +1,7 @@
 """Relevance classifiers: decide whether a case matches a user's criterion.
 
-Every classifier implements the ``Classifier`` protocol, so the evaluation
-runner and the user interface work with LLM and embedding approaches alike.
+``Classifier`` is the protocol the pipeline depends on. ``LLMClassifier`` is the
+only implementation; the embedding comparison lives in ``eval/run_embedding_eval.py``.
 """
 
 from __future__ import annotations

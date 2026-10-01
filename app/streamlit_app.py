@@ -58,11 +58,15 @@ if st.button("Run classification", type="primary", disabled=not request.strip())
     if not cases:
         st.warning("No cases contain that keyword.")
         st.stop()
-    classifier = classifier_for(prompt_version)
+    try:
+        classifier = classifier_for(prompt_version)
+        definition = classifier.definition_for(request)
+    except Exception as exc:
+        st.error(f"Could not start: {exc}. Check that GEMINI_API_KEY is set in .env.")
+        st.stop()
     with st.spinner(f"Classifying {len(cases)} cases..."):
         results = run_filter(request, cases, classifier)
     st.session_state["results"] = results
-    definition = classifier.definition_for(request)
     st.session_state["run"] = {
         "request": request,
         "classifier": classifier.name,

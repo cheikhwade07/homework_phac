@@ -55,11 +55,21 @@ class GeminiEmbedder:
         """Embed one text (chunked and averaged if long) as a unit vector."""
         key = ResponseCache.key(model=self.model, text=text)
         hit = self.cache.get(key)
-        if hit is not None:
+        if hit is not None and "seconds" in hit:
+            self.seconds_spent += hit["seconds"]
+            self.api_calls += hit["calls"]
             return np.array(hit["vector"])
+        before_seconds, before_calls = self.seconds_spent, self.api_calls
         chunks = [self._embed_chunk(chunk) for chunk in split_long_text(text)]
         vector = normalise(np.mean(chunks, axis=0))
-        self.cache.put(key, {"vector": vector.tolist()})
+        self.cache.put(
+            key,
+            {
+                "vector": vector.tolist(),
+                "seconds": self.seconds_spent - before_seconds,
+                "calls": self.api_calls - before_calls,
+            },
+        )
         return vector
 
     def _embed_chunk(self, text: str, max_retries: int = 6) -> np.ndarray:

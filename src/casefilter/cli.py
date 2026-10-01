@@ -14,6 +14,7 @@ import textwrap
 
 from casefilter.data import load_cases
 from casefilter.pipeline import DEFAULT_PROMPT, build_classifier, run_filter, select_cases
+from casefilter.prompts import PROMPTS_DIR
 
 RULE = "-" * 110
 
@@ -37,16 +38,34 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--show-text", action="store_true", help="print relevant cases in full")
     args = parser.parse_args(argv)
 
+    if not args.request.strip():
+        parser.error("the request is empty")
+    if args.n < 1:
+        parser.error("--n must be at least 1")
+    available = sorted(p.stem for p in PROMPTS_DIR.glob("classify.*.toml"))
+    if args.prompt not in available:
+        parser.error(f"unknown prompt '{args.prompt}'; choose from: {', '.join(available)}")
+
+    try:
+        classifier = build_classifier(args.prompt)
+    except Exception as exc:  # most often a missing API key
+        print(f"Could not start the LLM client: {exc}", file=sys.stderr)
+        print("Set GEMINI_API_KEY in a .env file (see .env.example).", file=sys.stderr)
+        return 2
+
     cases = select_cases(load_cases(), args.n, args.seed, args.keyword)
     if not cases:
-        print("No cases match the keyword.", file=sys.stderr)
+        print(f"No cases contain the keyword '{args.keyword}'.", file=sys.stderr)
         return 1
-    classifier = build_classifier(args.prompt)
     scope = f" containing '{args.keyword}'" if args.keyword else ""
     print(f"Request:    {args.request}")
     print(f"Classifier: {classifier.name}")
     print(f"Cases:      {len(cases)}{scope}")
-    definition = classifier.definition_for(args.request)
+    try:
+        definition = classifier.definition_for(args.request)
+    except Exception as exc:
+        print(f"Could not interpret the request: {exc}", file=sys.stderr)
+        return 2
     if definition is not None:
         print()
         print("Request interpreted as")
@@ -71,6 +90,8 @@ def main(argv: list[str] | None = None) -> int:
         if prediction.evidence:
             flag = "" if prediction.evidence_found else "  [quote not found in case text]"
             print(f'  evidence: "{prediction.evidence}"{flag}')
+        elif prediction.evidence_found is False:
+            print("  evidence: [none given]")
         if prediction.reason:
             print(f"  reason:   {prediction.reason}")
         if args.show_text:

@@ -106,10 +106,12 @@ class GeminiClient:
         )
         hit = self.cache.get(key)
         if hit is not None:
-            return LLMResponse(**{**hit, "latency_s": 0.0, "cached": True})
+            # latency_s stays that of the original call, so reruns report the same timing.
+            return LLMResponse(**{**hit, "cached": True})
 
         response = self._call_with_retries(system, user, schema)
-        self.cache.put(key, {k: v for k, v in response.__dict__.items() if k != "cached"})
+        if response.text.strip():  # an empty or blocked response must not become permanent
+            self.cache.put(key, {k: v for k, v in response.__dict__.items() if k != "cached"})
         return response
 
     def _call_with_retries(self, system: str, user: str, schema: dict[str, Any]) -> LLMResponse:
