@@ -1,0 +1,21 @@
+{
+  "model_tokenizer": "gemini-2.5-flash",
+  "n_cases": 110182,
+  "sample_size": 200,
+  "chars_per_token": 4.58,
+  "estimated_tokens_percentiles": {
+    "p50": 547,
+    "p90": 1133,
+    "p99": 2297,
+    "p99.9": 4927,
+    "p100": 17310
+  },
+  "share_over_limit": {
+    "llm_context": 0.0,
+    "embedding_input": 0.00021
+  },
+  "cases_over_limit": {
+    "llm_context": 0,
+    "embedding_input": 23
+  }
+}
