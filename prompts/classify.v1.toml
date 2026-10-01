@@ -1,0 +1,27 @@
+# Baseline: the prompt template from the assignment brief, unchanged.
+# Kept as the reference point that later versions are measured against.
+version = "classify.v1"
+description = "Assignment template, raw user request, label only"
+
+system = ""
+
+user = """You are a clinical text classification assistant.
+Determine whether the following clinical case is relevant
+to the user's classification request.
+
+User request:
+{classification_criteria}
+
+Clinical case:
+{case_text}
+
+Return only:
+YES or NO"""
+
+[schema]
+type = "OBJECT"
+required = ["label"]
+
+[schema.properties.label]
+type = "STRING"
+enum = ["YES", "NO"]
