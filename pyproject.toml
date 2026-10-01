@@ -13,10 +13,12 @@ dependencies = [
     "python-dotenv>=1.0",
     "numpy>=1.26",
     "pandas>=2.0",
-    "rank-bm25>=0.2.2",
     "scikit-learn>=1.4",
     "streamlit>=1.35",
 ]
+
+[project.scripts]
+casefilter = "casefilter.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.5"]
